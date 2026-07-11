@@ -1,72 +1,51 @@
-const tiers = [
-  {
-    name: "Early Bird",
-    price: "$99",
-    storage: "512 GB",
-    note: "First 500 backers only",
-    highlight: false,
-    perks: ["512 GB NVMe storage", "USB-C + WiFi 6E sync", "Companion apps, all platforms"],
-  },
-  {
-    name: "Standard",
-    price: "$149",
-    storage: "1 TB",
-    note: "Planned retail: $199",
-    highlight: true,
-    perks: [
-      "1 TB NVMe storage",
-      "Everything in Early Bird",
-      "AI organization & duplicate cleanup",
-      "Fingerprint secure vault",
-    ],
-  },
-  {
-    name: "Family Pack",
-    price: "$139 ea.",
-    storage: "1 TB × 2",
-    note: "Two units, shared setup",
-    highlight: false,
-    perks: [
-      "Two 1 TB units",
-      "Shared family albums, separate private spaces",
-      "Everything in Standard",
-    ],
-  },
-  {
-    name: "Founder's Edition",
-    price: "$299",
-    storage: "4 TB",
-    note: "Limited run, numbered enclosure",
-    highlight: false,
-    perks: [
-      "4 TB NVMe storage",
-      "MagSafe ring + wireless charging",
-      "Lifetime AI feature updates",
-      "Name in the credits",
-    ],
-  },
-];
+"use client";
+
+import { useState } from "react";
+import { TIERS, formatUsd } from "@/lib/tiers";
 
 export default function Tiers() {
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  async function handlePledge(tierId: string) {
+    setErrorMsg("");
+    setLoadingId(tierId);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tierId }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) {
+        throw new Error(data?.error || "Could not start checkout");
+      }
+      window.location.assign(data.url);
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Could not start checkout");
+      setLoadingId(null);
+    }
+  }
+
   return (
     <section id="tiers" className="border-t border-white/5 py-24">
       <div className="mx-auto max-w-6xl px-6">
         <h2 className="text-sm font-semibold uppercase tracking-widest text-cyan-400">
-          Planned reward tiers
+          Reward tiers
         </h2>
         <p className="mt-4 max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl">
-          Reserve your spot before we launch
+          Reserve your unit
         </p>
         <p className="mt-4 max-w-2xl text-neutral-400">
-          These are the reward tiers we&apos;re planning for our Kickstarter
-          campaign. Sign up to get notified the moment pledging opens —
-          nothing is charged now.
+          Secure checkout powered by Stripe. We&apos;re in pre-launch, so
+          payments are currently running in Stripe test mode — no real charge
+          will be made.
         </p>
 
         <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {tiers.map((t) => (
+          {TIERS.map((t) => (
             <div
-              key={t.name}
+              key={t.id}
               className={`flex flex-col rounded-2xl border p-6 ${
                 t.highlight
                   ? "border-cyan-400/50 bg-cyan-400/[0.06] shadow-lg shadow-cyan-500/10"
@@ -79,7 +58,7 @@ export default function Tiers() {
                 </span>
               )}
               <h3 className="text-lg font-semibold">{t.name}</h3>
-              <div className="mt-2 text-3xl font-bold">{t.price}</div>
+              <div className="mt-2 text-3xl font-bold">{formatUsd(t.amount)}</div>
               <div className="mt-1 text-sm text-cyan-400">{t.storage}</div>
               <p className="mt-1 text-xs text-neutral-500">{t.note}</p>
 
@@ -92,19 +71,32 @@ export default function Tiers() {
                 ))}
               </ul>
 
-              <a
-                href="#notify"
-                className={`mt-6 rounded-full px-4 py-2.5 text-center text-sm font-semibold transition ${
+              <button
+                type="button"
+                onClick={() => handlePledge(t.id)}
+                disabled={loadingId === t.id}
+                className={`mt-6 rounded-full px-4 py-2.5 text-center text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${
                   t.highlight
                     ? "bg-cyan-400 text-black hover:bg-cyan-300"
                     : "border border-white/15 text-white hover:border-cyan-400/50"
                 }`}
               >
-                Notify me
-              </a>
+                {loadingId === t.id ? "Redirecting…" : `Pledge ${formatUsd(t.amount)}`}
+              </button>
             </div>
           ))}
         </div>
+
+        {errorMsg && (
+          <p className="mt-6 rounded-xl border border-red-400/40 bg-red-400/10 px-5 py-3 text-center text-sm font-medium text-red-300">
+            {errorMsg}
+          </p>
+        )}
+
+        <p className="mt-6 text-center text-xs text-neutral-500">
+          Test mode — use card number 4242 4242 4242 4242, any future
+          expiry, and any CVC to complete a test pledge.
+        </p>
       </div>
     </section>
   );
