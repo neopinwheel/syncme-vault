@@ -4,6 +4,14 @@ import { Resend } from "resend";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const TO_ADDRESS = "neo.pinwheel@gmail.com";
 const FROM_ADDRESS = "SyncME Vault <onboarding@resend.dev>";
+const QUERY_TYPES = [
+  "General question",
+  "Press & media",
+  "Partnership",
+  "Investor",
+  "Support",
+  "Other",
+];
 
 function clean(value: unknown, maxLength: number): string {
   if (typeof value !== "string") return "";
@@ -18,9 +26,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const { name, email, message } = body as Record<string, unknown>;
+  const { name, email, subject, message } = body as Record<string, unknown>;
   const cleanName = clean(name, 100);
   const cleanEmail = clean(email, 200);
+  const cleanSubject = QUERY_TYPES.includes(clean(subject, 50))
+    ? clean(subject, 50)
+    : QUERY_TYPES[0];
   const cleanMessage = typeof message === "string" ? message.trim().slice(0, 5000) : "";
 
   if (!cleanName || !cleanEmail || !cleanMessage) {
@@ -42,8 +53,8 @@ export async function POST(request: Request) {
       from: FROM_ADDRESS,
       to: TO_ADDRESS,
       replyTo: cleanEmail,
-      subject: `SyncME Vault contact form — ${cleanName}`,
-      text: `Name: ${cleanName}\nEmail: ${cleanEmail}\n\nMessage:\n${cleanMessage}`,
+      subject: `[${cleanSubject}] SyncME Vault contact form — ${cleanName}`,
+      text: `Name: ${cleanName}\nEmail: ${cleanEmail}\nQuery type: ${cleanSubject}\n\nMessage:\n${cleanMessage}`,
     });
 
     if (error) {
