@@ -2,6 +2,7 @@ const links = [
   { href: "#story", label: "Story" },
   { href: "#features", label: "Features" },
   { href: "#specs", label: "Specs" },
+  { href: "#engineering", label: "Engineering" },
   { href: "#tiers", label: "Rewards" },
   { href: "#faq", label: "FAQ" },
 ];

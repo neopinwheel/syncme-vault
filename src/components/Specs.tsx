@@ -1,14 +1,15 @@
 const specs = [
   { label: "Processor", value: "ARM SoC w/ WiFi 6E + Bluetooth LE (Mediatek Genio 700 class)" },
+  { label: "On-device AI", value: "Hosts private LLMs entirely offline for local inference" },
   { label: "Storage", value: "NVMe SSD, 512 GB – 4 TB (M.2, upgradeable)" },
   { label: "Connectivity", value: "WiFi 6E, Bluetooth LE, USB-C 3.2 Gen 2" },
   { label: "Battery", value: "3.7V LiPo, hot-swap capable charging" },
   { label: "Charging", value: "USB-C wired + optional Qi wireless charging" },
-  { label: "Security", value: "Optional capacitive fingerprint sensor, encrypted vault" },
+  { label: "Security", value: "Biometric fingerprint sensor wired direct to the SoC via SPI, encrypted vault" },
   { label: "Mounting", value: "Optional MagSafe-compatible ring" },
   { label: "Indicators", value: "RGB status ring + capacitive touch button" },
   { label: "Form factor", value: "Car key fob sized, pocket portable" },
-  { label: "Thermal", value: "Passive heat spreader over NVMe module" },
+  { label: "Thermal", value: "Passive copper/aluminum heat spreader over SoC and NVMe module" },
 ];
 
 export default function Specs() {
@@ -25,9 +26,9 @@ export default function Specs() {
             </p>
             <p className="mt-6 text-neutral-400">
               SyncME Vault pairs a WiFi 6E-capable ARM SoC with an NVMe SSD in a
-              sealed, key-fob-sized enclosure — enough horsepower to run on-device
-              AI for photo scoring, deduplication, and search without a cloud
-              round-trip.
+              sealed, key-fob-sized enclosure — enough horsepower to host private
+              AI models and run photo scoring, deduplication, and search entirely
+              on-device, without a cloud round-trip.
             </p>
             <p className="mt-4 text-xs uppercase tracking-widest text-neutral-500">
               Specifications are preliminary and may change before production.

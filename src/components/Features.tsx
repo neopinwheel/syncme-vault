@@ -1,5 +1,10 @@
 const features = [
   {
+    icon: "🤖",
+    title: "On-device LLM hosting",
+    body: "SyncME Vault hosts private large language models entirely offline — real AI inference with zero cloud round-trip.",
+  },
+  {
     icon: "🔄",
     title: "Automatic wireless backup",
     body: "The moment you're home and charging, new photos and files sync over WiFi 6E — no cables, no app to remember to open.",

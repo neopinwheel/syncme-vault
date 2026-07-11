@@ -4,10 +4,13 @@ import Story from "@/components/Story";
 import HowItWorks from "@/components/HowItWorks";
 import Features from "@/components/Features";
 import DemoVideo from "@/components/DemoVideo";
+import Sovereignty from "@/components/Sovereignty";
 import Specs from "@/components/Specs";
+import Engineering from "@/components/Engineering";
 import Tiers from "@/components/Tiers";
 import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
+import Anthem from "@/components/Anthem";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -20,10 +23,13 @@ export default function Home() {
         <HowItWorks />
         <Features />
         <DemoVideo />
+        <Sovereignty />
         <Specs />
+        <Engineering />
         <Tiers />
         <FAQ />
         <CTA />
+        <Anthem />
       </main>
       <Footer />
     </div>
