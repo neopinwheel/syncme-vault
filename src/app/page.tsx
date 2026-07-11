@@ -10,6 +10,7 @@ import Engineering from "@/components/Engineering";
 import Tiers from "@/components/Tiers";
 import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
+import Contact from "@/components/Contact";
 import Anthem from "@/components/Anthem";
 import Footer from "@/components/Footer";
 
@@ -29,6 +30,7 @@ export default function Home() {
         <Tiers />
         <FAQ />
         <CTA />
+        <Contact />
         <Anthem />
       </main>
       <Footer />
